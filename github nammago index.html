@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NammaGo | Premium Self-Drive Cars</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.4s, color 0.4s; user-select: none; -webkit-user-select: none; }
+        @media (prefers-color-scheme: dark) {
+            body { background-color: #0b0f19; background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(25,100%,50%,0.15) 0, transparent 50%); color: #f8fafc; }
+            .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); }
+            .text-adaptive-heading { color: #ffffff !important; } .text-adaptive-body { color: #cbd5e1 !important; } .text-adaptive-muted { color: #94a3b8 !important; }
+            .logo-dark-img { display: block; } .logo-light-img { display: none; }
+        }
+        @media (prefers-color-scheme: light) {
+            body { background-color: #f8fafc; background-image: radial-gradient(at 0% 0%, hsla(210, 40%, 96%, 1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(25,100%,80%,0.25) 0, transparent 50%); color: #0f172a; }
+            .glass-card { background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04); backdrop-filter: blur(20px); }
+            .text-adaptive-heading { color: #0f172a !important; } .text-adaptive-body { color: #334155 !important; } .text-adaptive-muted { color: #64748b !important; }
+            .logo-dark-img { display: none; } .logo-light-img { display: block; }
+        }
+        .tab-active { background: #f97316 !important; color: #ffffff !important; border-color: #f97316 !important; }
+        html { scroll-behavior: smooth; } img { pointer-events: none; }
+        .shimmer { background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%); background-size: 200% 100%; animation: load 1.5s infinite; }
+        @media (prefers-color-scheme: light) { .shimmer { background: linear-gradient(90deg, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.05) 75%); background-size: 200% 100%; } }
+        @keyframes load { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-0" oncontextmenu="return false;">
+
+    <header class="sticky top-0 z-40 w-full glass-card border-b py-2 px-6 md:px-12 flex justify-between items-center">
+        <div class="flex items-center">
+            <img class="logo-dark-img max-h-16 object-contain" src="https://i.ibb.co/whMRvM5r/Namm-Go-logo-light-theme.png" alt="NammaGo">
+            <img class="logo-light-img max-h-16 object-contain" src="https://i.ibb.co/q3LNq5V4/Namm-Go-logo-dark-theme.png" alt="NammaGo">
+        </div>
+        <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-adaptive-body">
+            <a href="#fleet" class="hover:text-orange-500 transition">Cars</a>
+            <a href="#how-it-works" class="hover:text-orange-500 transition">How it Works</a>
+            <a href="#reviews" class="hover:text-orange-500 transition">Reviews</a>
+            <button onclick="openModal('enquiry')" class="text-orange-500 font-bold hover:underline transition">Send Enquiry</button>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-12 py-10">
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-adaptive-heading mb-4">Namma<span class="text-orange-500">Go</span></h1>
+            <p class="text-adaptive-body max-w-xl mx-auto text-sm md:text-base">Premium, sanitized self-drive vehicles. Real-time availability straight from our automated fleet desk records.</p>
+        </section>
+
+        <section id="fleet" class="scroll-mt-24 mb-20">
+            <div class="glass-card rounded-2xl p-4 md:p-6 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:w-72">
+                    <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                    <input type="text" id="searchInput" placeholder="Search car models..." class="w-full bg-white/50 dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded-xl py-2 px-10 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                </div>
+                <div class="flex gap-2 w-full md:w-auto overflow-x-auto whitespace-nowrap">
+                    <button id="defaultTab" onclick="filterType('All')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold glass-card text-adaptive-body transition tab-active">All</button>
+                    <button onclick="filterType('SUV')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold glass-card text-adaptive-body transition">SUVs</button>
+                    <button onclick="filterType('Hatchback')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold glass-card text-adaptive-body transition">Hatchbacks</button>
+                    <button onclick="filterType('Sedan')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold glass-card text-adaptive-body transition">Sedans</button>
+                </div>
+            </div>
+            
+            <div id="carsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Instant Visual Skeleton Loader -->
+                <div class="glass-card rounded-3xl p-4 h-96 flex flex-col justify-between border"><div class="shimmer w-full h-48 rounded-2xl mb-4"></div><div class="shimmer w-1/3 h-4 rounded mb-2"></div><div class="shimmer w-2/3 h-6 rounded mb-4"></div><div class="shimmer w-full h-10 rounded-xl"></div></div>
+                <div class="glass-card rounded-3xl p-4 h-96 flex flex-col justify-between border hidden md:flex"><div class="shimmer w-full h-48 rounded-2xl mb-4"></div><div class="shimmer w-1/3 h-4 rounded mb-2"></div><div class="shimmer w-2/3 h-6 rounded mb-4"></div><div class="shimmer w-full h-10 rounded-xl"></div></div>
+                <div class="glass-card rounded-3xl p-4 h-96 flex flex-col justify-between border hidden lg:flex"><div class="shimmer w-full h-48 rounded-2xl mb-4"></div><div class="shimmer w-1/3 h-4 rounded mb-2"></div><div class="shimmer w-2/3 h-6 rounded mb-4"></div><div class="shimmer w-full h-10 rounded-xl"></div></div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="scroll-mt-24 mb-20">
+            <div class="text-center mb-10"><span class="text-xs uppercase font-extrabold tracking-widest text-orange-500 bg-orange-500/10 px-3 py-1 rounded-full">Simple Process</span><h2 class="text-3xl font-extrabold text-adaptive-heading mt-3">How NammaGo Works</h2></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card rounded-2xl p-6 relative flex flex-col justify-between transition"><div class="w-12 h-12 rounded-xl bg-orange-500 flex items-center justify-center text-white mb-6"><i data-lucide="search" class="w-6 h-6"></i></div><h3 class="text-xl font-bold text-adaptive-heading mb-2">1. Browse & Choose</h3><p class="text-sm text-adaptive-body">Explore our live digital fleet and select your perfect car layout.</p><span class="absolute top-4 right-6 text-4xl font-extrabold text-slate-400/20 select-none">01</span></div>
+                <div class="glass-card rounded-2xl p-6 relative flex flex-col justify-between transition"><div class="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center text-white mb-6"><i data-lucide="message-square" class="w-6 h-6"></i></div><h3 class="text-xl font-bold text-adaptive-heading mb-2">2. Book on WhatsApp</h3><p class="text-sm text-adaptive-body">Submit dates, location and details to initialize instant verification paths.</p><span class="absolute top-4 right-6 text-4xl font-extrabold text-slate-400/20 select-none">02</span></div>
+                <div class="glass-card rounded-2xl p-6 relative flex flex-col justify-between transition"><div class="w-12 h-12 rounded-xl bg-blue-500 flex items-center justify-center text-white mb-6"><i data-lucide="key-round" class="w-6 h-6"></i></div><h3 class="text-xl font-bold text-adaptive-heading mb-2">3. Pick Up & Drive</h3><p class="text-sm text-adaptive-body">Collect keys at our designated garage center or select direct drop option.</p><span class="absolute top-4 right-6 text-4xl font-extrabold text-slate-400/20 select-none">03</span></div>
+            </div>
+        </section>
+
+        <section id="reviews" class="scroll-mt-24 mb-12">
+            <div class="text-center mb-10"><h2 class="text-3xl font-extrabold text-adaptive-heading">What Our Customers Say</h2></div>
+            <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+    </main>
+
+    <footer class="glass-card border-t w-full py-10 px-6 text-adaptive-muted">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+                <span class="font-extrabold text-lg text-adaptive-heading">NammaGo Cars</span>
+                <p class="text-xs mt-2 font-medium">Renowned self-drive solutions providing immaculate reliability across paths.</p>
+                <div class="mt-4 text-xs space-y-1 font-semibold text-adaptive-body">
+                    <p class="flex items-center justify-center md:justify-start gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-orange-500"></i> Marathahalli, Bengaluru, Karnataka - 560037</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2 text-sm font-semibold">
+                <span class="text-xs font-bold uppercase tracking-wider text-adaptive-heading mb-1">Company Info</span>
+                <button onclick="openLegalPopup('about')" class="hover:text-orange-500 text-left w-max mx-auto md:mx-0 transition">About Us</button>
+                <button onclick="openLegalPopup('contact')" class="hover:text-orange-500 text-left w-max mx-auto md:mx-0 transition">Contact Us</button>
+                <button onclick="openLegalPopup('privacy')" class="hover:text-orange-500 text-left w-max mx-auto md:mx-0 transition">Privacy Policy</button>
+                <button onclick="openLegalPopup('terms')" class="hover:text-orange-500 text-left w-max mx-auto md:mx-0 transition">Terms & Conditions</button>
+            </div>
+            <div class="flex flex-col items-center md:items-start gap-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-adaptive-heading">Follow Channels</span>
+                <!-- Restored robust Lucide Native Icons for reliable rendering -->
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-orange-500 transition"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-orange-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-orange-500 transition"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-orange-500 transition"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-orange-500 transition"><i data-lucide="send" class="w-5 h-5"></i></a>
+                    <a href="https://wa.me/919876543210" target="_blank" class="hover:text-orange-500 transition"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Action Bar -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-card border-t px-4 py-2.5 flex items-center justify-around text-adaptive-muted">
+        <a href="#fleet" class="flex flex-col items-center text-[10px] font-bold"><i data-lucide="car-front" class="w-5 h-5"></i> Cars</a>
+        <a href="#how-it-works" class="flex flex-col items-center text-[10px] font-bold"><i data-lucide="info" class="w-5 h-5"></i> Process</a>
+        <button onclick="openModal('enquiry')" class="flex flex-col items-center text-[10px] font-bold text-orange-500"><i data-lucide="help-circle" class="w-5 h-5"></i> Enquiry</button>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-lg rounded-3xl p-6 relative text-slate-900 dark:text-white">
+            <button onclick="closeModal('booking')" class="absolute top-4 right-4 text-adaptive-muted"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-2xl font-bold text-adaptive-heading mb-1" id="bookingTitle">Confirm Booking Request</h3>
+            <p class="text-sm text-adaptive-muted mb-6" id="selectedCarName"></p>
+            <form onsubmit="handleBookingSubmit(event)" class="space-y-4 text-slate-900 dark:text-white">
+                <input type="hidden" id="carModelInput"><input type="hidden" id="carTypeInput"><input type="hidden" id="carStatusInput">
+                <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Full Name</label><input type="text" id="custName" required class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl py-2 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Contact Phone</label><input type="tel" id="custPhone" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Destination Hub</label><input type="text" id="destLoc" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">From Date</label><input type="date" id="startDate" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">To Date</label><input type="date" id="endDate" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                </div>
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold rounded-xl shadow-lg flex items-center justify-center gap-2"><i data-lucide="send" class="w-5 h-5"></i> Request via WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Enquiry Dialog -->
+    <div id="enquiryModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-lg rounded-3xl p-6 relative text-slate-900 dark:text-white">
+            <button onclick="closeModal('enquiry')" class="absolute top-4 right-4 text-adaptive-muted"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-2xl font-bold text-adaptive-heading mb-6">General Journey Enquiry</h3>
+            <form onsubmit="handleEnquirySubmit(event)" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Your Name</label><input type="text" id="enqName" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Contact Phone</label><input type="tel" id="enqPhone" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                </div>
+                <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Email Address</label><input type="email" id="enqEmail" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Car Layout</label><select id="enqType" class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"><option>Any Vehicle</option><option>SUV</option><option>Hatchback</option><option>Sedan</option></select></div>
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Travel Days</label><input type="number" id="enqDays" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Start Date</label><input type="date" id="enqStart" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                    <div><label class="block text-xs font-bold text-adaptive-muted mb-1">Pickup Time</label><input type="time" id="enqTime" required class="w-full bg-white dark:bg-slate-900 border p-2 text-sm rounded-xl"></div>
+                </div>
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold rounded-xl shadow-lg flex items-center justify-center gap-2"><i data-lucide="help-circle" class="w-5 h-5"></i> Send Enquiry via WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Legal Popups Content Drawer -->
+    <div id="legalPopup" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-2xl rounded-3xl p-6 relative max-h-[80vh] overflow-y-auto">
+            <button onclick="closeLegalPopup()" class="absolute top-4 right-4 text-adaptive-muted"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 id="legalTitle" class="text-2xl font-bold text-adaptive-heading mb-4 capitalize"></h3>
+            <div id="legalContent" class="text-sm text-adaptive-body space-y-3 whitespace-pre-line leading-relaxed font-medium"></div>
+        </div>
+    </div>
+
+    <script>
+        const CLOUD_DESK_URL = 'https://script.google.com/macros/s/AKfycbz19vpthdjcyNJSEHZeYqZbmMgOAUW_MRgn6cc2rhSVOhg3AFOC71c_3eyem7Ds9szE7Q/exec'; 
+        let localData = { cars: [], reviews: [], legal: [] };
+        let activeFilter = 'All';
+        const WHATSAPP_NUM = "919876543210";
+
+        // Extremely robust date formatter that ignores tricky timezone auto-conversions
+        function formatDisplayDate(dateStr) {
+            if(!dateStr) return '';
+            try {
+                // Strip Google's ISO timezone tail entirely to force accurate local rendering
+                const cleanStr = String(dateStr).split('T')[0];
+                const d = new Date(cleanStr);
+                if(isNaN(d.getTime())) return dateStr;
+                
+                const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+                const day = d.getDate().toString().padStart(2, '0');
+                const month = months[d.getMonth()];
+                const year = d.getFullYear();
+                
+                return `${day} ${month} ${year}`;
+            } catch(e) {
+                return dateStr;
+            }
+        }
+
+        async function initMarketplace() {
+            try {
+                const res = await fetch(CLOUD_DESK_URL);
+                localData = await res.json();
+            } catch (e) {
+                console.error("Link offline or incorrect setup.");
+            }
+            renderFleet();
+            renderReviews();
+            
+            // Global Force-Render to ensure static HTML icons (like social media footer) display properly
+            lucide.createIcons();
+        }
+
+        function renderFleet() {
+            const grid = document.getElementById('carsGrid');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            grid.innerHTML = '';
+
+            const filtered = localData.cars.filter(c => (activeFilter === 'All' || c.Type.toLowerCase() === activeFilter.toLowerCase()) && c.Model.toLowerCase().includes(search));
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-adaptive-muted">No cars match criteria.</div>`;
+                return;
+            }
+
+            filtered.forEach(car => {
+                const isBooked = car.Status === 'Booked';
+                const imageList = car.Images ? car.Images.split(',') : ['https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500'];
+
+                let slidesHTML = '';
+                imageList.forEach((img, idx) => {
+                    slidesHTML += `<div class="carousel-slide ${idx === 0 ? 'block' : 'hidden'} w-full h-48"><img src="${img.trim()}" class="w-full h-full object-cover"/></div>`;
+                });
+
+                grid.insertAdjacentHTML('beforeend', `
+                <div class="glass-card rounded-3xl p-4 flex flex-col justify-between h-full border">
+                    <div class="relative w-full h-48 rounded-2xl overflow-hidden mb-4 bg-slate-200 dark:bg-slate-800 product-carousel">
+                        ${slidesHTML}
+                        ${imageList.length > 1 ? `
+                        <button onclick="shiftCarousel(this, -1)" class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">◀</button>
+                        <button onclick="shiftCarousel(this, 1)" class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">▶</button>
+                        ` : ''}
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">${car.Type}</span>
+                            <div class="flex items-center text-xs font-bold gap-1 text-adaptive-body"><i data-lucide="star" class="w-3.5 h-3.5 fill-amber-500 text-amber-500"></i> ${car.Rating || "4.9"}</div>
+                        </div>
+                        <h4 class="text-xl font-bold text-adaptive-heading mb-2">${car.Model}</h4>
+
+                        <div class="mb-4 p-2 rounded-xl border ${isBooked ? 'bg-orange-500/10 border-orange-500/30' : 'bg-emerald-500/10 border-emerald-500/30'}">
+                            <span class="text-xs font-bold uppercase tracking-wider ${isBooked ? 'text-orange-600 dark:text-orange-400' : 'text-emerald-600 dark:text-emerald-400'}">
+                                ${isBooked ? `Booked (${formatDisplayDate(car.BookedFrom)} - ${formatDisplayDate(car.BookedTo)})` : 'Available Now'}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 border-t border-b py-3 mb-4 text-[11px] text-adaptive-muted font-bold border-black/5 dark:border-white/5">
+                            <div class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i> ${car.Seats} Seats</div>
+                            <div class="flex items-center gap-1"><i data-lucide="gauge" class="w-3.5 h-3.5"></i> ${car.Transmission}</div>
+                            <div class="flex items-center gap-1"><i data-lucide="fuel" class="w-3.5 h-3.5"></i> ${car.Fuel}</div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div><span class="text-2xl font-extrabold text-adaptive-heading">₹${Number(car.Price).toLocaleString('en-IN')}</span><span class="text-xs text-adaptive-muted">/day</span></div>
+                            <button onclick="openBooking('${car.Model}', '${car.Type}', '${car.Status}')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r ${isBooked ? 'from-orange-500 to-red-500' : 'from-emerald-500 to-teal-600'} text-white font-bold text-xs uppercase tracking-wider">${isBooked ? 'Pre-Book Future' : 'Book Now'}</button>
+                        </div>
+                    </div>
+                </div>
+                `);
+            });
+            // Re-render dynamically injected icons
+            lucide.createIcons();
+        }
+
+        function shiftCarousel(btn, dir) {
+            const container = btn.parentElement;
+            const slides = container.querySelectorAll('.carousel-slide');
+            let activeIdx = 0;
+            slides.forEach((s, idx) => { if(!s.classList.contains('hidden')) activeIdx = idx; });
+            slides[activeIdx].classList.add('hidden');
+            let nextIdx = (activeIdx + dir + slides.length) % slides.length;
+            slides[nextIdx].classList.remove('hidden');
+        }
+
+        function renderReviews() {
+            const container = document.getElementById('reviewsContainer'); 
+            container.innerHTML = '';
+            
+            localData.reviews.forEach(r => {
+                let starsHTML = '';
+                const starCount = Number(r.Stars) || 5;
+                
+                // Inject structural lucide icon formatting properly
+                for(let i = 0; i < 5; i++) {
+                    if (i < starCount) {
+                        starsHTML += `<i data-lucide="star" class="w-4 h-4 fill-amber-500 text-amber-500"></i>`;
+                    } else {
+                        starsHTML += `<i data-lucide="star" class="w-4 h-4 text-slate-300 dark:text-slate-600"></i>`;
+                    }
+                }
+                
+                container.insertAdjacentHTML('beforeend', `
+                <div class="glass-card rounded-2xl p-6 border flex flex-col justify-between">
+                    <div>
+                        <div class="flex gap-1 mb-3">${starsHTML}</div>
+                        <p class="text-adaptive-body text-sm italic mb-4">"${r.Text}"</p>
+                    </div>
+                    <span class="text-xs font-bold text-adaptive-heading">— ${r.Name}</span>
+                </div>
+                `);
+            });
+            // Immediately initialize the stars
+            lucide.createIcons();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', renderFleet);
+        
+        function filterType(type) { 
+            activeFilter = type; 
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active')); 
+            event.currentTarget.classList.add('tab-active'); 
+            renderFleet(); 
+        }
+
+        function openBooking(model, type, status) { 
+            document.getElementById('selectedCarName').innerText = model + (status === 'Booked' ? ' (Currently Busy - Prebook Enabled)' : ''); 
+            document.getElementById('carModelInput').value = model; 
+            document.getElementById('carTypeInput').value = type; 
+            document.getElementById('carStatusInput').value = status;
+            document.getElementById('bookingTitle').innerText = status === 'Booked' ? 'Reserve Future Dates' : 'Confirm Booking Request';
+            openModal('booking'); 
+        }
+
+        function openModal(id) { document.getElementById(id + 'Modal').classList.replace('hidden', 'flex'); }
+        function closeModal(id) { document.getElementById(id + 'Modal').classList.replace('flex', 'hidden'); }
+
+        function openLegalPopup(key) {
+            const page = localData.legal.find(l => l.Key === key);
+            document.getElementById('legalTitle').innerText = key.replace('_', ' ');
+            document.getElementById('legalContent').innerText = page ? page.Content : "Updating content logs...";
+            document.getElementById('legalPopup').classList.replace('hidden', 'flex');
+        }
+        function closeLegalPopup() { document.getElementById('legalPopup').classList.replace('flex', 'hidden'); }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            const status = document.getElementById('carStatusInput').value;
+            const prebookText = status === 'Booked' ? '%0A*Note: I see the vehicle is currently booked, but I wish to reserve it for the following future dates.*%0A' : '';
+            
+            const text = `Dear NammaGo, 🚗%0AI would like to book a *${document.getElementById('carModelInput').value}* [${document.getElementById('carTypeInput').value}].${prebookText}%0A%0A• *Name:* ${document.getElementById('custName').value}%0A• *Contact:* ${document.getElementById('custPhone').value}%0A• *Timeline:* ${document.getElementById('startDate').value} to ${document.getElementById('endDate').value}%0A• *Destination:* ${document.getElementById('destLoc').value}%0A%0A---%0A*AUTOMATED REQUISITION FILE REQUIREMENT:*%0APlease reply to this message directly with photos of your valid Driving License, Aadhar ID Card document, and office identity token proof safely.`;
+            window.open(`https://wa.me/${WHATSAPP_NUM}?text=${text}`, '_blank');
+            closeModal('booking');
+        }
+
+        function handleEnquirySubmit(e) {
+            e.preventDefault();
+            const text = `Dear NammaGo, ✉%0AI would like to enquire about dynamic rental availability.%0A%0A• *Name:* ${document.getElementById('enqName').value}%0A• *Contact:* ${document.getElementById('enqPhone').value}%0A• *Email:* ${document.getElementById('enqEmail').value}%0A• *Type:* ${document.getElementById('enqType').value}%0A• *Days:* ${document.getElementById('enqDays').value} Days%0A• *Timeline:* ${document.getElementById('enqStart').value} at ${document.getElementById('enqTime').value}`;
+            window.open(`https://wa.me/${WHATSAPP_NUM}?text=${text}`, '_blank');
+            closeModal('enquiry');
+        }
+
+        initMarketplace();
+    </script>
+</body>
+</html>
